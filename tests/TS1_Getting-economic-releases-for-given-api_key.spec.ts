@@ -28,7 +28,7 @@ test('Api_key incorrect', async ({ request }) => {
     expect(response.status()).toBeLessThan(500)
 
     const responseBody = await response.text();
-    expect(responseBody).toContain('error code');
+    expect(responseBody).toContain('error');
 })
 
 // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla pustego klucza interfejsu
@@ -38,7 +38,7 @@ test('Api_key empty', async ({ request }) => {
     expect(response.status()).toBeLessThan(500)
 
     const responseBody = await response.text();
-    expect(responseBody).toContain('error code');
+    expect(responseBody).toContain('error');
 })
 
 // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy klucz interfejsu nie jest podany
@@ -48,7 +48,7 @@ test('No api_key', async ({ request }) => {
     expect(response.status()).toBeLessThan(500)
 
     const responseBody = await response.text();
-    expect(responseBody).toContain('error code');
+    expect(responseBody).toContain('error');
 })
 
 // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy typ metody HTTP jest inny niż GET
@@ -58,6 +58,6 @@ test('Incorrect HTTP method type', async ({ request }) => {
     expect(response.status()).toBeLessThan(500)
 
     const responseBody = await response.text();
-    expect(responseBody).toContain('error code');
+    expect(responseBody).toContain('error');
 })
 

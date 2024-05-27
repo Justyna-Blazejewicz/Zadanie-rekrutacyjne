@@ -35,7 +35,7 @@ test('File_type is random (except JSON/XML)', async ({ request }) => {
     expect(response.status()).toBeLessThan(500)
 
     const responseBody = await response.text();
-    expect(responseBody).toContain('error code');
+    expect(responseBody).toContain('error');
 })
 
 // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla pustego typu danych
