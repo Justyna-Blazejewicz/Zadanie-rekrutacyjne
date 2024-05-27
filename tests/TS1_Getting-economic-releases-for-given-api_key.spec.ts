@@ -1,63 +1,60 @@
 import { test, expect } from '@playwright/test';
 
-// test('API GET Request', async ({ request }) => {
-//     const responseBody = await request.get(`https://api.stlouisfed.org/fred/releases?api_key=ab71bd75ae93bcab2ab2d5940b2ac8fd&file_type=json`)
-//     expect(responseBody.status()).toBe(200)
+const HTTP200 = 200;
+const HTTP400 = 400;
+const HTTP500 = 500;
+const error_message = 'error';
+const correct_api_key = 'ab71bd75ae93bcab2ab2d5940b2ac8fd';
+const incorrect_api_key = 'ab71bd75ae93bcab2ab2d5940b2ac8fk';
 
-//     const issues = await request.get(`https://api.stlouisfed.org/fred/releases?api_key=ab71bd75ae93bcab2ab2d5940b2ac8fd&file_type=json`);
-//     expect(issues.ok()).toBeTruthy();
-//     expect(await issues.json()).toEqual(expect.objectContaining({
-//         count: 314
-//     }));
-// })
 
 // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla prawidłowego klucza interfejsu
 test('Api_key correct', async ({ request }) => {
-    const response = await request.get(`https://api.stlouisfed.org/fred/releases?api_key=ab71bd75ae93bcab2ab2d5940b2ac8fd`)
-    expect(response.status()).toBe(200)
+    const response = await request.get(`?api_key=${correct_api_key}`)
+    expect(response.status()).toBe(HTTP200)
 
     const responseBody = await response.text();
     expect(responseBody).toEqual(expect.anything());
     expect(Object.keys(responseBody).length).toBeGreaterThan(0);
 })
 
-// Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla nieprawidłowego klucza interfejsu
-test('Api_key incorrect', async ({ request }) => {
-    const response = await request.get(`https://api.stlouisfed.org/fred/releases?api_key=ab71bd75ae93bcab2ab2d5940b2ac8fk`)
-    expect(response.status()).toBeGreaterThanOrEqual(400)
-    expect(response.status()).toBeLessThan(500)
+    // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla nieprawidłowego klucza interfejsu
+    test('Api_key incorrect', async ({ request }) => {
+        const response = await request.get(`?api_key=${incorrect_api_key}`)
+        expect(response.status()).toBeGreaterThanOrEqual(HTTP400)
+        expect(response.status()).toBeLessThan(HTTP500)
 
-    const responseBody = await response.text();
-    expect(responseBody).toContain('error');
-})
+        const responseBody = await response.text();
+        expect(responseBody).toContain(error_message);
+    })
 
-// Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla pustego klucza interfejsu
-test('Api_key empty', async ({ request }) => {
-    const response = await request.get(`https://api.stlouisfed.org/fred/releases?api_key=`)
-    expect(response.status()).toBeGreaterThanOrEqual(400)
-    expect(response.status()).toBeLessThan(500)
+    // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane dla pustego klucza interfejsu
+    test('Api_key empty', async ({ request }) => {
+        const response = await request.get(`?api_key=`)
+        expect(response.status()).toBeGreaterThanOrEqual(HTTP400)
+        expect(response.status()).toBeLessThan(HTTP500)
 
-    const responseBody = await response.text();
-    expect(responseBody).toContain('error');
-})
+        const responseBody = await response.text();
+        expect(responseBody).toContain(error_message);
+    })
 
-// Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy klucz interfejsu nie jest podany
-test('No api_key', async ({ request }) => {
-    const response = await request.get(`https://api.stlouisfed.org/fred/releases`)
-    expect(response.status()).toBeGreaterThanOrEqual(400)
-    expect(response.status()).toBeLessThan(500)
+    // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy klucz interfejsu nie jest podany
+    test('No api_key', async ({ request }) => {
+        const response = await request.get(``)
+        expect(response.status()).toBeGreaterThanOrEqual(HTTP400)
+        expect(response.status()).toBeLessThan(HTTP500)
 
-    const responseBody = await response.text();
-    expect(responseBody).toContain('error');
-})
+        const responseBody = await response.text();
+        expect(responseBody).toContain(error_message);
+    })
 
-// Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy typ metody HTTP jest inny niż GET
-test('Incorrect HTTP method type', async ({ request }) => {
-    const response = await request.post(`https://api.stlouisfed.org/fred/releases`)
-    expect(response.status()).toBeGreaterThanOrEqual(400)
-    expect(response.status()).toBeLessThan(500)
+    // Sprawdzenie poprawności działania czy dane ekonomiczne są wyciągane gdy typ metody HTTP jest inny niż GET
+    test('Incorrect HTTP method type', async ({ request }) => {
+        const response = await request.post(`?api_key=${correct_api_key}`)
+        expect(response.status()).toBeGreaterThanOrEqual(HTTP400)
+        expect(response.status()).toBeLessThan(HTTP500)
 
-    const responseBody = await response.text();
-    expect(responseBody).toContain('error');
-})
+        const responseBody = await response.text();
+        expect(responseBody).toContain(error_message);
+    })
 
